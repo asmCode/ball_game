@@ -110,7 +110,6 @@ public class Palete : MonoBehaviour
                 prevShotAngle = angle;
 
                 break;
-
         }
     }
 }
