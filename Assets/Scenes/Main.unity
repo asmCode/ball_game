@@ -217,6 +217,8 @@ MonoBehaviour:
   racket: {fileID: 2134717189}
   racketReference: {fileID: 2073708955}
   racketPivot: {fileID: 779836363}
+  ball: {fileID: 903027143}
+  collision: 0
 --- !u!1 &565300367
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,6 +514,7 @@ GameObject:
   - component: {fileID: 903027141}
   - component: {fileID: 903027140}
   - component: {fileID: 903027139}
+  - component: {fileID: 903027143}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -589,12 +592,24 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 903027138}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.75, y: 1.2, z: 0}
+  m_LocalPosition: {x: -4.494, y: 1.163, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &903027143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903027138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfeb2cdf97dd28949a31deedf5c581d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

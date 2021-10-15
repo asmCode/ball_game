@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Palete : MonoBehaviour
 {
+    public const float kBallRadius = 0.15f;
+    public const float kRacketHalfWidth = 0.1f;
+
     private enum State
     {
         Idle,
@@ -15,6 +18,8 @@ public class Palete : MonoBehaviour
     public GameObject racket;
     public GameObject racketReference;
     public GameObject racketPivot;
+    public Ball ball;
+    public bool collision;
 
     private State state;
     private Vector3 initialUp;
@@ -83,8 +88,6 @@ public class Palete : MonoBehaviour
                         {
                             transform.up = -initialUp;
                         }
-
-                        Debug.Log($"angle={Vector3.SignedAngle(transform.up, initialUp, Vector3.forward)}, swing={swing}");
                     }
                 }
                 else if (Input.GetMouseButtonUp(0))
@@ -105,11 +108,27 @@ public class Palete : MonoBehaviour
                 {
                     transform.up = initialUp;
                     state = State.Idle;
+                    collision = false;
                 }
 
                 prevShotAngle = angle;
 
                 break;
         }
+
+        if (!collision && MathUtils.RayPointDistance(new Ray2D(transform.position, transform.up), ball.transform.position) < kBallRadius + kRacketHalfWidth)
+        {
+            Debug.Log("Collision");
+            collision = true;
+
+            ball.AddVelocity(GetPaletteSide(ball.transform.position) ? transform.right : -transform.right);
+        }
+
+        // Debug.Log($"side={GetPaletteSide(ball.transform.position)}");
+    }
+
+    private bool GetPaletteSide(Vector3 point)
+    {
+        return Mathf.Sign(Vector3.Cross(transform.up, (point - transform.position)).z) < 0.0f;
     }
 }
