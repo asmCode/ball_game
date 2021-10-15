@@ -6,6 +6,7 @@ public class Palete : MonoBehaviour
 {
     public const float kBallRadius = 0.15f;
     public const float kRacketHalfWidth = 0.1f;
+    private const float kAngleAcceleration = 2000.0f;
 
     private enum State
     {
@@ -24,14 +25,13 @@ public class Palete : MonoBehaviour
     private State state;
     private Vector3 initialUp;
     private float swing;
-    private const float kAngleAcceleration = 10000.0f;
     private float swingAngleSpeed = 0.0f;
     private float prevShotAngle;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        // ball.AddVelocity(Vector2.right);
     }
 
     // Update is called once per frame
@@ -56,6 +56,9 @@ public class Palete : MonoBehaviour
             case State.Position:
                 if (Input.GetMouseButtonDown(0))
                 {
+                    collision = false;
+                    swingAngleSpeed = 0.0f;
+
                     Vector3 touchWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     touchWorldPosition.z = 0.0f;
                     transform.up = (touchWorldPosition - transform.position).normalized;
@@ -94,7 +97,6 @@ public class Palete : MonoBehaviour
                 {
                     prevShotAngle = Vector3.Angle(transform.up, initialUp);
                     state = State.Shot;
-                    swingAngleSpeed = 0.0f;
                 }
                 break;
 
@@ -104,24 +106,30 @@ public class Palete : MonoBehaviour
 
                 float angle = Vector3.Angle(transform.up, initialUp);
 
+                if (!collision &&
+                    MathUtils.RayPointDistance(new Ray2D(transform.position, transform.up), ball.transform.position, out float distanceOnRacket) < kBallRadius + kRacketHalfWidth &&
+                    distanceOnRacket >= 0.0f &&
+                    distanceOnRacket <= 2.0f)
+                {
+                    float linearSpeed = MathUtils.GetLinearSpeed(swingAngleSpeed * Mathf.Deg2Rad, distanceOnRacket);
+                    Debug.Log($"Collision, linearSpeed={linearSpeed}");
+                    collision = true;
+
+                    Vector2 racketReflectDirection = GetPaletteSide(ball.transform.position) ? transform.right : -transform.right;
+
+                    ball.Reflect(racketReflectDirection);
+                    ball.AddVelocity(racketReflectDirection * linearSpeed * 0.4f);
+                }
+
                 if (Mathf.Abs(angle) < 0.1 || Mathf.Abs(angle) > Mathf.Abs(prevShotAngle))
                 {
                     transform.up = initialUp;
                     state = State.Idle;
-                    collision = false;
                 }
 
                 prevShotAngle = angle;
 
                 break;
-        }
-
-        if (!collision && MathUtils.RayPointDistance(new Ray2D(transform.position, transform.up), ball.transform.position) < kBallRadius + kRacketHalfWidth)
-        {
-            Debug.Log("Collision");
-            collision = true;
-
-            ball.AddVelocity(GetPaletteSide(ball.transform.position) ? transform.right : -transform.right);
         }
 
         // Debug.Log($"side={GetPaletteSide(ball.transform.position)}");

@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class MathUtils
 {
-    public static float RayPointDistance(Ray2D ray, Vector2 point)
+    public static float RayPointDistance(Ray2D ray, Vector2 point, out float projectionOnRay)
     {
-        float projectionOnRay = Vector2.Dot(ray.direction, point - ray.origin);
+        projectionOnRay = Vector2.Dot(ray.direction, point - ray.origin);
         return (ray.GetPoint(projectionOnRay) - point).magnitude;
+    }
+
+    public static float GetLinearSpeed(float anglePerSecond, float radius)
+    {
+        return anglePerSecond * radius;
     }
 }

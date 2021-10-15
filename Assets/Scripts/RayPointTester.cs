@@ -16,6 +16,8 @@ public class RayPointTester : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Debug.Log($"distance={MathUtils.RayPointDistance(new Ray2D(racket.transform.position, racket.transform.up), ball.transform.position)}");
+        float projectionOnRay;
+        float distance = MathUtils.RayPointDistance(new Ray2D(racket.transform.position, racket.transform.up), ball.transform.position, out projectionOnRay);
+        // Debug.Log($"distance={distance}, projectionOnRay={projectionOnRay}");
     }
 }
