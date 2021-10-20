@@ -32,6 +32,7 @@ public class Palete : MonoBehaviour
     void Start()
     {
         // ball.AddVelocity(Vector2.right);
+        ball.SetStill(true);
     }
 
     // Update is called once per frame
@@ -116,9 +117,9 @@ public class Palete : MonoBehaviour
                     collision = true;
 
                     Vector2 racketReflectDirection = GetPaletteSide(ball.transform.position) ? transform.right : -transform.right;
-
+                    ball.SetStill(false);
                     ball.Reflect(racketReflectDirection);
-                    ball.AddVelocity(racketReflectDirection * linearSpeed * 0.4f);
+                    ball.AddVelocity(racketReflectDirection * linearSpeed * 1.0f);
                 }
 
                 if (Mathf.Abs(angle) < 0.1 || Mathf.Abs(angle) > Mathf.Abs(prevShotAngle))
