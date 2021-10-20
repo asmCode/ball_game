@@ -6,7 +6,7 @@ public class Palete : MonoBehaviour
 {
     public const float kBallRadius = 0.15f;
     public const float kRacketHalfWidth = 0.1f;
-    private const float kAngleAcceleration = 2000.0f;
+    private const float kAngleAcceleration = 8000.0f;
 
     private enum State
     {
@@ -110,7 +110,7 @@ public class Palete : MonoBehaviour
                 if (!collision &&
                     MathUtils.RayPointDistance(new Ray2D(transform.position, transform.up), ball.transform.position, out float distanceOnRacket) < kBallRadius + kRacketHalfWidth &&
                     distanceOnRacket >= 0.0f &&
-                    distanceOnRacket <= 2.0f)
+                    distanceOnRacket <= 1.0f)
                 {
                     float linearSpeed = MathUtils.GetLinearSpeed(swingAngleSpeed * Mathf.Deg2Rad, distanceOnRacket);
                     Debug.Log($"Collision, linearSpeed={linearSpeed}");
