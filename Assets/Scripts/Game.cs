@@ -8,6 +8,11 @@ public class Game : MonoBehaviour
 
     private Vector2 ballInitialPosition;
 
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
