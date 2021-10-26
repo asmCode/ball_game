@@ -6,7 +6,7 @@ public class Palete : MonoBehaviour
 {
     public const float kBallRadius = 0.15f;
     public const float kRacketHalfWidth = 0.1f;
-    private const float kAngleAcceleration = 8000.0f;
+    private const float kAngleAcceleration = 300000.0f;
 
     private enum State
     {
@@ -123,40 +123,45 @@ public class Palete : MonoBehaviour
                     state = State.Shot;
                 }
                 break;
-
-            case State.Shot:
-                swingAngleSpeed += kAngleAcceleration * Time.deltaTime;
-                transform.up = Quaternion.AngleAxis(swingAngleSpeed * Time.deltaTime * Mathf.Sign(swing), Vector3.forward) * transform.up;
-
-                float angle = Vector3.Angle(transform.up, initialUp);
-
-                if (!collision &&
-                    MathUtils.RayPointDistance(new Ray2D(transform.position, transform.up), ball.transform.position, out float distanceOnRacket) < kBallRadius + kRacketHalfWidth &&
-                    distanceOnRacket >= 0.0f &&
-                    distanceOnRacket <= 1.0f)
-                {
-                    float linearSpeed = MathUtils.GetLinearSpeed(swingAngleSpeed * Mathf.Deg2Rad, distanceOnRacket);
-                    Debug.Log($"Collision, linearSpeed={linearSpeed}");
-                    collision = true;
-
-                    Vector2 racketReflectDirection = GetPaletteSide(ball.transform.position) ? transform.right : -transform.right;
-                    ball.SetStill(false);
-                    ball.Reflect(racketReflectDirection);
-                    ball.AddVelocity(racketReflectDirection * linearSpeed * 1.0f);
-                }
-
-                if (Mathf.Abs(angle) < 0.1 || Mathf.Abs(angle) > Mathf.Abs(prevShotAngle))
-                {
-                    transform.up = initialUp;
-                    state = State.Idle;
-                }
-
-                prevShotAngle = angle;
-
-                break;
         }
 
         // Debug.Log($"side={GetPaletteSide(ball.transform.position)}");
+    }
+
+    private void FixedUpdate()
+    {
+        if (state != State.Shot)
+        {
+            return;
+        }
+
+        swingAngleSpeed += kAngleAcceleration * Time.fixedDeltaTime;
+        transform.up = Quaternion.AngleAxis(swingAngleSpeed * Time.fixedDeltaTime * Mathf.Sign(swing), Vector3.forward) * transform.up;
+
+        float angle = Vector3.Angle(transform.up, initialUp);
+
+        if (!collision &&
+            MathUtils.RayPointDistance(new Ray2D(transform.position, transform.up), ball.transform.position, out float distanceOnRacket) < kBallRadius + kRacketHalfWidth &&
+            distanceOnRacket >= 0.0f &&
+            distanceOnRacket <= 1.0f)
+        {
+            float linearSpeed = MathUtils.GetLinearSpeed(swingAngleSpeed * Mathf.Deg2Rad, distanceOnRacket);
+            Debug.Log($"Collision, linearSpeed={linearSpeed}");
+            collision = true;
+
+            Vector2 racketReflectDirection = GetPaletteSide(ball.transform.position) ? transform.right : -transform.right;
+            ball.SetStill(false);
+            ball.Reflect(racketReflectDirection);
+            ball.AddVelocity(racketReflectDirection * linearSpeed * 1.0f);
+        }
+
+        if (Mathf.Abs(angle) < 0.1 || Mathf.Abs(angle) > Mathf.Abs(prevShotAngle))
+        {
+            transform.up = initialUp;
+            state = State.Idle;
+        }
+
+        prevShotAngle = angle;
     }
 
     private bool GetPaletteSide(Vector3 point)
