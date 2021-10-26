@@ -11,6 +11,7 @@ public class Palete : MonoBehaviour
     private enum State
     {
         Idle,
+        SettingPosition,
         Position,
         Angle,
         Shot,
@@ -46,11 +47,33 @@ public class Palete : MonoBehaviour
                     Vector3 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     position.z = 0.0f;
                     transform.position = position;
-                    state = State.Position;
+                    state = State.SettingPosition;
 
                     racket.SetActive(false);
                     racketReference.SetActive(false);
                     racketPivot.SetActive(true);
+                }
+                break;
+
+            case State.SettingPosition:
+                if (Input.GetMouseButton(0))
+                {
+                    Vector3 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    position.z = 0.0f;
+                    transform.position = position;
+
+                    racket.SetActive(false);
+                    racketReference.SetActive(false);
+                    racketPivot.SetActive(true);
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    Vector3 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    position.z = 0.0f;
+                    transform.position = position;
+
+                    state = State.Position;
                 }
                 break;
 
